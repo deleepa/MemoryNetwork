@@ -1,6 +1,6 @@
-line0
-line1
-line2,
+Man
+How many legs do you have?
+I have two legs,
 line0
 line1
 line2,

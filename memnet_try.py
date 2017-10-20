@@ -12,9 +12,9 @@ import numpy as np
 import re
 import csv
 from keras.models import model_from_json
+
 def tokenize(sent):
     return [x.strip() for x in re.split('(\W+)?', sent) if x.strip()]
-
 
 def parse_stories(lines, only_supporting=False):
     data = []
@@ -27,16 +27,13 @@ def parse_stories(lines, only_supporting=False):
         q = tokenize(q)
 
         data.append((supporting, q, a))
-        
-    return data
+        return data
 
 def get_stories(f, only_supporting=False, max_length=None):
-
     data = parse_stories(f, only_supporting=only_supporting)
     flatten = lambda data: reduce(lambda x, y: x + y, data)
     data = [(story, q, answer) for story, q, answer in data]
     return data
-
 
 def vectorize_stories(data, word_idx, story_maxlen, query_maxlen):
     X = []
@@ -53,13 +50,16 @@ def vectorize_stories(data, word_idx, story_maxlen, query_maxlen):
         Y.append(y)
     return (pad_sequences(X, maxlen=story_maxlen),
             pad_sequences(Xq, maxlen=query_maxlen), np.array(Y))
-print('Extracting stories ')
+
+print('Extracting stories...')
 train=[]
 test=[]
-with open('', 'rb') as f:
-    reader = csv.reader(f)
+
+#append each row of the file to train and test arrays, b is used for binary mode in Windows
+with open('test_data.txt', 'rb') as f:
     count= 1
-    for row in reader:
+    for row in f:
+        #file should have at least 100 lines to train and probably 25 lines as test data(using 80:20 rule)
         if count <101:
             train.append(row)
         else:
